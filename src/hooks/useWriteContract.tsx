@@ -8,25 +8,7 @@ export const useWriteContract = () => {
   const { signer } = useSignerOrProvider();
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Sign Message
-  const signMessage = useCallback(
-    async (messageAuth: string): Promise<{ success: boolean; data: string }> => {
-      setLoading(true);
-      const authMessage = messageAuth.length > 0 ? { Title: `${messageAuth}` } : { Title: "Hello Web3!" };
-
-      try {
-        const transactionHash = await signer?.signMessage(authMessage.Title);
-        return { success: true, data: transactionHash ?? "" };
-      } catch (error: any) {
-        const message = error.reason ?? error.message ?? error;
-        return { success: false, data: message };
-      } finally {
-        setLoading(false);
-      }
-    },
-    [signer]
-  );
-
+  
   // Transfer Native Currency
   const transferNative = useCallback(
     async (
@@ -63,7 +45,6 @@ export const useWriteContract = () => {
 
   return {
     loading,
-    signMessage,
     transferNative
   };
 };

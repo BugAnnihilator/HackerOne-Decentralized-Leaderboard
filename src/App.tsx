@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Layout, ConfigProvider, theme } from "antd";
 
 import DisplayPane from "components/displayPane/DisplayPane";
-import { CustomHeader, MainContent, CustomFooter } from "layout";
+import { CustomHeader, MainContent } from "layout";
 
 import "styles/App.css";
 
@@ -34,7 +34,6 @@ function App() {
         <MainContent>
           <DisplayPane isDarkMode={isDarkMode} />
         </MainContent>
-        <CustomFooter />
       </Layout>
     </ConfigProvider>
   );

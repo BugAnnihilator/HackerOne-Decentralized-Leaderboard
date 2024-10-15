@@ -54,6 +54,37 @@ const ChainSelector: FC = () => {
   }, []);
 
   useEffect(() => {
+    if (chainId && chainId !== 17000) {
+      
+      const addHoleskyNetwork = async () => {
+        try {
+          if (window.ethereum) {
+            await (window.ethereum as any).request({
+              method: 'wallet_addEthereumChain',
+              params: [{
+                chainId: '0x4268',
+                chainName: 'Holesky',
+                nativeCurrency: {
+                  name: 'Holesky ETH',
+                  symbol: 'ETH',
+                  decimals: 18
+                },
+                rpcUrls: ['https://ethereum-holesky.publicnode.com'],
+                blockExplorerUrls: ['https://holesky.etherscan.io']
+              }]
+            });
+          } else {
+            throw new Error('Ethereum provider not found');
+          }
+        } catch (error) {
+          console.error('Failed to add Holesky network:', error);
+        }
+      };
+
+      addHoleskyNetwork();
+    }
+  }, [chainId]);
+  useEffect(() => {
     if (chainId) {
       handleChainChange(chainId.toString());
     }
