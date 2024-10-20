@@ -41,7 +41,7 @@ const LEADERBOARD_ABI = require("../../data/abi/Hackerone.json");
 
 const DisplayPane: React.FC<DisplayPaneProps> = ({ isDarkMode }) => {
   const { isActivating, isActive, account, provider } = useWeb3React();
-  const { isTablet } = useWindowSize();  const [username, setUsername] = useState("");
+  const { isTablet } = useWindowSize(); const [username, setUsername] = useState("");
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [isHacker, setIsHacker] = useState<boolean | null>(null);
 
@@ -72,6 +72,15 @@ const DisplayPane: React.FC<DisplayPaneProps> = ({ isDarkMode }) => {
   };
 
 
+
+  const addToLeaderboard = async (username: string) => {
+    try {
+      const result = await hackeroneContract?.addHacker(username);
+      message.success(`Hacker status checked: ${result ? 'Wallet liked with HackerOne account!' : 'Wallet not liked with HackerOne account!'}`);
+      console.log(alert)
+    } catch (error) {
+    }
+  };
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -111,7 +120,7 @@ const DisplayPane: React.FC<DisplayPaneProps> = ({ isDarkMode }) => {
         {isActive && (
           <>
             <div style={{ marginTop: "20px" }}>
-            
+
               <Input
                 placeholder="Enter your HackerOne username"
                 value={username}
@@ -148,7 +157,7 @@ const DisplayPane: React.FC<DisplayPaneProps> = ({ isDarkMode }) => {
               )}
             </div>
             <div style={{ marginTop: "20px" }}>
-              <Button
+              {isHacker && <Button
                 onClick={updateLeaderboard}
                 style={{
                   width: "100%",
@@ -163,14 +172,14 @@ const DisplayPane: React.FC<DisplayPaneProps> = ({ isDarkMode }) => {
                 }}
               >
                 Update Leaderboard
-              </Button>
-              <Button
+              </Button>}
+              {isHacker && <Button
                 onClick={removeFromLeaderboard}
-                style={{ width: "100%", marginBottom: "10px",marginTop: "10px" }}
+                style={{ width: "100%", marginBottom: "10px", marginTop: "10px" }}
                 danger
               >
                 Remove Account from Leaderboard
-              </Button>
+              </Button>}
             </div>
             {isActive && <Button
               onClick={toggleLeaderboard}
