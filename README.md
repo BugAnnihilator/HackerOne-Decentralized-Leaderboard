@@ -6,6 +6,9 @@ Welcome, everyone! This is my first web3 app. As a bug bounty hunter and develop
 
 ### Smart Contracts on Holesky Testnet
 
+
+The app is now live and can be accessed at https://bugannihilator.github.io/HackerOne-Decentralized-Leaderboard/ 
+
 The smart contracts are deployed on the **Holesky testnet chain**. You can get free faucets from the following link:
 [Google Cloud Ethereum Faucet for Holesky](https://cloud.google.com/application/web3/faucet/ethereum/holesky)
 
