@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Typography, Input, Button, message } from "antd";
-const { Title } = Typography;
 import { ethers } from "ethers";
 import { useWindowSize } from "hooks";
 import { Status } from "./components";
 import HackerOneLeaderboard from "../HackerOneLeaderboard/HackerOneLeaderboard";
 import { HACKERONE_CONTRACT_ADDRESS } from "../../data/constants/contract_address";
+
+const { Title } = Typography;
+const LEADERBOARD_ABI = require("../../data/abi/Hackerone.json");
 
 
 interface HackerData {
@@ -47,7 +49,6 @@ type DisplayPaneProps = {
 };
 
 const LEADERBOARD_CONTRACT_ADDRESS = HACKERONE_CONTRACT_ADDRESS;
-const LEADERBOARD_ABI = require("../../data/abi/Hackerone.json");
 
 const DisplayPane: React.FC<DisplayPaneProps> = ({ isDarkMode }) => {
   const { isActivating, isActive, account, provider } = useWeb3React();

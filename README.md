@@ -1,10 +1,18 @@
 # Welcome Guys!
 
-This is my first Web3 app! As a **Bug Bounty Hunter** and **Developer**, I have now migrated into the Web3 space. After spending some time understanding the key concepts, I was able to build my first **Hybrid Smart Contract** and this accompanying app. 
+Welcome, everyone! This is my first web3 app. As a bug bounty hunter and developer, I have ventured into the web3 space. After gaining a good understanding of some key concepts, I built my first hybrid smart contract and this app. I want to thank the boilerplate for providing the template!
 
-### Why I Built This App
+**Note**: This project is more about the smart contracts I developed than the UI/UX design.
 
-This project isn't about fancy UI/UX; it’s about the **smart contracts** I developed and deployed. My goal was to create a functional decentralized application to showcase my expertise in smart contract development, leveraging the knowledge I've gained through the **Solidity** and **Ethereum** courses I've taken.
+### Smart Contracts on Holesky Testnet
+
+The smart contracts are deployed on the **Holesky testnet chain**. You can get free faucets from the following link:
+[Google Cloud Ethereum Faucet for Holesky](https://cloud.google.com/application/web3/faucet/ethereum/holesky)
+
+Here are the deployed contract addresses:
+
+- **HackerOneCaller.sol**: `0xFD687D9072499C5f066Eb09516ed5598d99e1c8D`
+- **HackerOneOracle.sol**: `0x1e431c8c63080F9BA82cC214C2eee6bF2a2931Cd`
 
 ### Key Highlights
 
@@ -22,7 +30,7 @@ The core functionality of this application revolves around two smart contracts: 
 
 The smart contracts are located in the following path:
 
-{[https://github.com/BugAnnihilator/HackerOne-Decentralized-Leaderboard/tree/main/src/Smart_Contracts](https://github.com/BugAnnihilator/HackerOne-Decentralized-Leaderboard/tree/main/src/Smart_Contracts)}
+[https://github.com/BugAnnihilator/HackerOne-Decentralized-Leaderboard/tree/main/src/Smart_Contracts](https://github.com/BugAnnihilator/HackerOne-Decentralized-Leaderboard/tree/main/src/Smart_Contracts)
 
 Feel free to explore the contract code to see the implementation details of this Web3 application!
 

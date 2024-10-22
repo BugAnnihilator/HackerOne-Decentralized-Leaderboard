@@ -68,5 +68,5 @@ type LogoProps = {
 };
 
 export const Logo: FC<LogoProps> = ({  }) => {
-
+  return(<></>)
 };
