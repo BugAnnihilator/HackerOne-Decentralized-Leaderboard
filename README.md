@@ -22,6 +22,7 @@ The core functionality of this application revolves around two smart contracts: 
 
 The smart contracts are located in the following path:
 
+{[https://github.com/BugAnnihilator/HackerOne-Decentralized-Leaderboard/tree/main/src/Smart_Contracts](https://github.com/BugAnnihilator/HackerOne-Decentralized-Leaderboard/tree/main/src/Smart_Contracts)}
 
 Feel free to explore the contract code to see the implementation details of this Web3 application!
 
