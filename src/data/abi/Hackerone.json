@@ -206,8 +206,46 @@
 		"outputs": [
 			{
 				"internalType": "bool",
-				"name": "",
+				"name": "exists",
 				"type": "bool"
+			},
+			{
+				"internalType": "string",
+				"name": "userName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "avatarUrl",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "totalReputation",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "totalReports",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "impact",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getHackersCount",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -252,6 +290,19 @@
 				"internalType": "uint256",
 				"name": "impact",
 				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "oracleAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",

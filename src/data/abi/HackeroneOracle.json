@@ -5,14 +5,20 @@
 			{
 				"indexed": false,
 				"internalType": "address",
-				"name": "callerAddress",
+				"name": "_callerAddress",
 				"type": "address"
 			},
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "id",
+				"name": "_id",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "_pendingRequests",
+				"type": "string"
 			}
 		],
 		"name": "DataFetchRequested",
@@ -68,7 +74,13 @@
 		"type": "event"
 	},
 	{
-		"inputs": [],
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_userName",
+				"type": "string"
+			}
+		],
 		"name": "getHackerData",
 		"outputs": [
 			{

@@ -6,7 +6,17 @@ import { ethers } from "ethers";
 import { useWindowSize } from "hooks";
 import { Status } from "./components";
 import HackerOneLeaderboard from "../HackerOneLeaderboard/HackerOneLeaderboard";
-import { useLeaderboard } from "../../hooks/useLeaderboard";
+import { HACKERONE_CONTRACT_ADDRESS } from "../../data/constants/contract_address";
+
+
+interface HackerData {
+  isExisting: boolean;
+  userName: string;
+  totalReputation: number;
+  totalReports: number;
+  avatarUrl: string;
+  impact: number;
+}
 
 const styles = {
   container: {
@@ -36,14 +46,15 @@ type DisplayPaneProps = {
   isDarkMode: boolean;
 };
 
-const LEADERBOARD_CONTRACT_ADDRESS = "0x89AA40a7ffDafc4533f367f693445F60f14B5eAB";
+const LEADERBOARD_CONTRACT_ADDRESS = HACKERONE_CONTRACT_ADDRESS;
 const LEADERBOARD_ABI = require("../../data/abi/Hackerone.json");
 
 const DisplayPane: React.FC<DisplayPaneProps> = ({ isDarkMode }) => {
   const { isActivating, isActive, account, provider } = useWeb3React();
-  const { isTablet } = useWindowSize(); const [username, setUsername] = useState("");
+  const { isTablet } = useWindowSize();
+  const [username, setUsername] = useState("");
   const [showLeaderboard, setShowLeaderboard] = useState(false);
-  const [isHacker, setIsHacker] = useState<boolean | null>(null);
+  const [hackerData, setHackerData] = useState<HackerData | null>(null);
 
   const [hackeroneContract, setHackeroneContract] = useState<ethers.Contract | null>(null);
 
@@ -62,25 +73,46 @@ const DisplayPane: React.FC<DisplayPaneProps> = ({ isDarkMode }) => {
   const checkHackerStatus = async (address: string) => {
     try {
       const result = await hackeroneContract?.checkHackerExists(address);
-      setIsHacker(result);
-      console.log("Hacker status:", result);
-      message.success(`Hacker status checked: ${result ? 'Wallet liked with HackerOne account!' : 'Wallet not liked with HackerOne account!'}`);
+      if (result) {
+        const [exists, userName, avatarUrl, totalReputation, totalReports, impact] = result;
+
+        // Update the state with the fetched hacker data
+        setHackerData({
+          isExisting: exists,
+          userName,
+          totalReputation: totalReputation.toNumber(),
+          totalReports: totalReports.toNumber(),
+          avatarUrl,
+          impact: impact.toNumber(),
+        });
+        console.log("Hacker status:", hackerData);
+        if (exists) {
+          message.success(`Hacker status checked: Wallet linked with HackerOne account!`);
+        }
+        else {
+          message.info(`Hacker status checked: Wallet not linked with HackerOne account!`);
+        }
+      }
     } catch (error) {
       console.error("Error checking hacker status:", error);
       message.error("Failed to check hacker status. Please try again.");
     }
   };
-
-
-
   const addToLeaderboard = async (username: string) => {
     try {
+      message.loading("Fetching hacker data...", 0); // Duration '0' means it will persist until manually closed
       const result = await hackeroneContract?.addHacker(username);
-      message.success(`Hacker status checked: ${result ? 'Wallet liked with HackerOne account!' : 'Wallet not liked with HackerOne account!'}`);
-      console.log(alert)
+      hackeroneContract?.on("HackerDataRecieved", (id: string) => {
+        if (id === result?.id) {
+          message.success("Hacker Added Successfully to the Leaderboard");
+          window.location.reload();
+        }
+      });
     } catch (error) {
+      console.error(error);
     }
   };
+
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -96,11 +128,21 @@ const DisplayPane: React.FC<DisplayPaneProps> = ({ isDarkMode }) => {
     // Implement the logic to update the leaderboard
   };
 
-  const removeFromLeaderboard = () => {
-    console.log("Removing account from leaderboard:", username);
-    // Implement the logic to remove the account from the leaderboard
+  const removeFromLeaderboard = async () => {
+    try {
+      message.loading("Deleting the account...", 0);
+      const result = await hackeroneContract?.removeHacker(account);
+      const receipt = await result.wait();
+      if (receipt.status === 1) {
+        message.success("Hacker Removed Successfully from the Leaderboard");
+        window.location.reload();
+      } else {
+        message.error("Failed to remove hacker from leaderboard");
+      }
+    } catch (error) {
+      message.error("Failed to remove hacker from leaderboard");
+    }
   };
-
   const toggleLeaderboard = () => {
     setShowLeaderboard(!showLeaderboard);
   };
@@ -114,14 +156,93 @@ const DisplayPane: React.FC<DisplayPaneProps> = ({ isDarkMode }) => {
         position: "relative"
       }}
     >
+
+      <Status isActivating={isActivating} isActive={isActive} account={account} hackeroneContract={hackeroneContract} />
       <Title>{isActive ? "Your HackerOne Profile" : "Connect your Wallet"}</Title>
+
+
+
       <div style={styles.content}>
-        <Status isActivating={isActivating} isActive={isActive} />
-        {isActive && (
+
+        {hackerData?.isExisting && (
+          <div style={{
+            marginTop: "30px",
+            marginLeft: "20px",
+            marginRight: "20px",
+            padding: "20px",
+            borderRadius: "12px",
+            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
+            background: isDarkMode ? "#2c3e50" : "#ffffff",
+            color: isDarkMode ? "#ecf0f1" : "#2c3e50",
+            transition: "all 0.3s ease"
+          }}>
+            <div style={{
+              width: "100px",
+              height: "100px",
+              borderRadius: "50%",
+              overflow: "hidden",
+              margin: "0 auto 20px",
+              border: `3px solid ${isDarkMode ? "#3498db" : "#2980b9"}`
+            }}>
+              <img src={hackerData.avatarUrl} alt="Hacker Avatar" style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover"
+              }} />
+            </div>
+            <h2 style={{
+              fontSize: "24px",
+              marginBottom: "20px",
+              textAlign: "center",
+              color: isDarkMode ? "#3498db" : "#2980b9"
+            }}>{hackerData.userName}</h2>
+            <div style={{
+              display: "flex",
+              justifyContent: "space-around",
+              flexWrap: "wrap"
+            }}>
+              <div style={{
+                flex: "1 1 200px",
+                margin: "10px",
+                padding: "15px",
+                borderRadius: "8px",
+                background: isDarkMode ? "#34495e" : "#ecf0f1",
+                textAlign: "center"
+              }}>
+                <h3 style={{ marginBottom: "10px", color: isDarkMode ? "#f39c12" : "#d35400" }}> Reports</h3>
+                <p>{hackerData.totalReports}</p>
+              </div>
+              <div style={{
+                flex: "1 1 200px",
+                margin: "10px",
+                padding: "15px",
+                borderRadius: "8px",
+                background: isDarkMode ? "#34495e" : "#ecf0f1",
+                textAlign: "center"
+              }}>
+                <h3 style={{ marginBottom: "10px", color: isDarkMode ? "#f39c12" : "#d35400" }}>Reputation</h3>
+                <p>{hackerData.totalReputation}</p>
+              </div>
+              <div style={{
+                flex: "1 1 200px",
+                margin: "10px",
+                padding: "15px",
+                borderRadius: "8px",
+                background: isDarkMode ? "#34495e" : "#ecf0f1",
+                textAlign: "center"
+              }}>
+                <h3 style={{ marginBottom: "10px", color: isDarkMode ? "#f39c12" : "#d35400" }}>Impact</h3>
+                <p>{hackerData.impact}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {isActive && hackerData && (
           <>
             <div style={{ marginTop: "20px" }}>
 
-              <Input
+              {hackerData && !hackerData.isExisting && <Input
                 placeholder="Enter your HackerOne username"
                 value={username}
                 onChange={handleUsernameChange}
@@ -135,8 +256,8 @@ const DisplayPane: React.FC<DisplayPaneProps> = ({ isDarkMode }) => {
                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                   transition: "all 0.3s ease"
                 }}
-              />
-              {!isHacker && (
+              />}
+              {hackerData && !hackerData.isExisting && (
                 <Button
                   type="primary"
                   onClick={handleSubmit}
@@ -157,7 +278,7 @@ const DisplayPane: React.FC<DisplayPaneProps> = ({ isDarkMode }) => {
               )}
             </div>
             <div style={{ marginTop: "20px" }}>
-              {isHacker && <Button
+              {hackerData && hackerData.isExisting && <Button
                 onClick={updateLeaderboard}
                 style={{
                   width: "100%",
@@ -173,7 +294,7 @@ const DisplayPane: React.FC<DisplayPaneProps> = ({ isDarkMode }) => {
               >
                 Update Leaderboard
               </Button>}
-              {isHacker && <Button
+              {hackerData && hackerData.isExisting && <Button
                 onClick={removeFromLeaderboard}
                 style={{ width: "100%", marginBottom: "10px", marginTop: "10px" }}
                 danger
@@ -181,24 +302,59 @@ const DisplayPane: React.FC<DisplayPaneProps> = ({ isDarkMode }) => {
                 Remove Account from Leaderboard
               </Button>}
             </div>
-            {isActive && <Button
-              onClick={toggleLeaderboard}
-              style={{
-                marginTop: "18px"
-              }}
-            >
-              {showLeaderboard ? "Hide Leaderboard" : "Show Leaderboard"}
-            </Button>}
+
           </>
         )}
       </div>
+
+      {isActive && <Button
+        onClick={toggleLeaderboard}
+        style={{
+          marginTop: "18px",
+          display: "block",
+          margin: "18px auto 0",
+          fontSize: "16px",
+          fontWeight: "bold",
+          color: "#ffffff",
+          backgroundColor: "#3498db",
+          border: "none",
+          borderRadius: "25px",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+          transition: "all 0.3s ease",
+          cursor: "pointer",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <span style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}>
+          {showLeaderboard ? (
+            <>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: "10px" }}>
+                <path d="M18 15l-6-6-6 6" />
+              </svg>
+              Hide Leaderboard
+            </>
+          ) : (
+            <>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: "10px" }}>
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+              Show Leaderboard
+            </>
+          )}
+        </span>
+      </Button>}
       {showLeaderboard && (
         <div style={{ padding: "20px" }}>
           <HackerOneLeaderboard />
         </div>
       )}
+
+
     </div>
   );
-};
-
-export default DisplayPane;
+}; export default DisplayPane;          
