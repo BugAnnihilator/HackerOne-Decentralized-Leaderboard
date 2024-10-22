@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/HackerOne-Decentralized-Leaderboard/static/css/main.7fe42d84.css",
+    "main.js": "/HackerOne-Decentralized-Leaderboard/static/js/main.0345c54e.js",
+    "static/js/774.0e482cc5.chunk.js": "/HackerOne-Decentralized-Leaderboard/static/js/774.0e482cc5.chunk.js",
+    "static/js/459.bba34c96.chunk.js": "/HackerOne-Decentralized-Leaderboard/static/js/459.bba34c96.chunk.js",
+    "static/media/metamask_Logo.svg": "/HackerOne-Decentralized-Leaderboard/static/media/metamask_Logo.322b917795f932ec2603591387f37bb1.svg",
+    "static/media/walletconnect_Logo.svg": "/HackerOne-Decentralized-Leaderboard/static/media/walletconnect_Logo.dfa25e470b69d81428be54242b6c9bd1.svg",
+    "index.html": "/HackerOne-Decentralized-Leaderboard/index.html",
+    "main.7fe42d84.css.map": "/HackerOne-Decentralized-Leaderboard/static/css/main.7fe42d84.css.map",
+    "main.0345c54e.js.map": "/HackerOne-Decentralized-Leaderboard/static/js/main.0345c54e.js.map",
+    "774.0e482cc5.chunk.js.map": "/HackerOne-Decentralized-Leaderboard/static/js/774.0e482cc5.chunk.js.map",
+    "459.bba34c96.chunk.js.map": "/HackerOne-Decentralized-Leaderboard/static/js/459.bba34c96.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7fe42d84.css",
+    "static/js/main.0345c54e.js"
+  ]
+}
